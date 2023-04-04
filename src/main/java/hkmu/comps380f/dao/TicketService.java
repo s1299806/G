@@ -2,14 +2,17 @@ package hkmu.comps380f.dao;
 
 import hkmu.comps380f.exception.AttachmentNotFound;
 import hkmu.comps380f.exception.TicketNotFound;
+import hkmu.comps380f.exception.commentNotFound;
 import hkmu.comps380f.model.Attachment;
 import hkmu.comps380f.model.Ticket;
 import hkmu.comps380f.model.TicketUser;
+import hkmu.comps380f.model.comment;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.xml.stream.events.Comment;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +23,8 @@ public class TicketService {
     private TicketRepository tRepo;
     @Resource
     private TicketUserRepository tuRepo;
-
+    @Resource
+    private commentRepository cRepo;
     @Resource
     private AttachmentRepository aRepo;
 
@@ -54,6 +58,19 @@ public class TicketService {
             throw new AttachmentNotFound(attachmentId);
         }
         return attachment;
+    }
+    @Transactional
+    public comment getComment(long ticketId, long commentId)
+            throws TicketNotFound, commentNotFound {
+        Ticket ticket = tRepo.findById(ticketId).orElse(null);
+        if (ticket == null) {
+            throw new TicketNotFound(ticketId);
+        }
+        comment comment = cRepo.findById(commentId).orElse(null);
+        if (comment == null){
+            throw new commentNotFound(commentId);
+        }
+        return comment;
     }
 
     @Transactional

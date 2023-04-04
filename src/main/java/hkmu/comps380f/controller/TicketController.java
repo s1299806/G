@@ -82,7 +82,13 @@ public class TicketController {
         }
     }
 
+    public static class commentForm{
+        private String body;
 
+        public String getBody() { return body; }
+
+        public void setBody(String body) { this.body = body; }
+    }
 
     @GetMapping("/view/{ticketId}")
     public String view(@PathVariable("ticketId") long ticketId,
@@ -93,6 +99,9 @@ public class TicketController {
         model.addAttribute("ticket", ticket);
         return "view";
     }
+
+    @GetMapping("view/{ticketId}/comment")
+    public String
 
     @GetMapping("/{ticketId}/attachment/{attachment:.+}")
     public View download(@PathVariable("ticketId") long ticketId,

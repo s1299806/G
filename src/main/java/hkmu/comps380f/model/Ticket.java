@@ -6,6 +6,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +35,11 @@ public class Ticket {
             cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     private List<Attachment> attachments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ticket", fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<comment> comments = new ArrayList<>();
 
     // getters and setters of all properties
     public long getId() {
@@ -79,6 +85,13 @@ public class Ticket {
     public void deleteAttachment(Attachment attachment) {
         attachment.setTicket(null);
         this.attachments.remove(attachment);
+    }
+
+    public void setComments(List<comment> comments) { this.comments = comments; }
+
+    public void deleteComment(comment comment){
+        comment.setTicket(null);
+        this.comments.remove(comment);
     }
 
     public TicketUser getCustomer() {
